@@ -1,26 +1,38 @@
-import { Heading, Spinner } from "@chakra-ui/react";
-import { useQuery } from "react-query";
+import { AddIcon } from "@chakra-ui/icons";
+import {
+  Flex,
+  Heading,
+  IconButton,
+  Spinner,
+} from "@chakra-ui/react";
+
+import { useNavigate } from "react-router-dom";
 import User from "./User";
 
-const fetchUsers = async () => {
-  const res = await fetch("https://jsonplaceholder.typicode.com/users");
-  return res.json();
-};
+export default function UserList(props) {
+  let data = props.data;
+  let isLoading = props.isLoading;
+  let isSuccess = props.isSuccess;
+  let navigate = useNavigate();
+  const addUserHandler = () => {
+    navigate("../add-user");
+  };
+  
 
-export default function UserList() {
-  const { isLoading, data, isSuccess } = useQuery("users", fetchUsers);
-
-  console.log(data);
+  // console.log(data);
   if (isLoading) {
-    <Spinner color='red.500' />
+    <Spinner color="red.500" />;
   }
   if (isSuccess) {
     return (
       <div>
-        <Heading>Users List</Heading>
+        <Flex justify="space-between">
+          <Heading>Users List</Heading>
+          <IconButton icon={<AddIcon />} onClick={addUserHandler}></IconButton>
+        </Flex>
         {data.map((user) => {
-        return  <User userName={user.name}></User>;
-      })}
+          return <User userData={user}></User>;
+        })}
       </div>
     );
   }
