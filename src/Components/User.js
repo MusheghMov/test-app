@@ -29,13 +29,13 @@ export default function User(props) {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>{user.name} Info</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <p>{user.name}</p>
-            <p>{user.email}</p>
-            <p>{user.username}</p>
-            <p>{user.phone}</p>
+            <p>Name: {user.name}</p>
+            <p>Email: {user.email}</p>
+            <p>Username: {user.username}</p>
+            <p>Phone: {user.phone}</p>
           </ModalBody>
 
           <ModalFooter>
