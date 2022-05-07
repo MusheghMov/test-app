@@ -21,16 +21,20 @@ export default function DeletedUsers(props) {
       <Flex justify="space-between">
         <Heading>Deleted Users</Heading>
       </Flex>
-      {data.map((user) => {
-        return (
-          <User
-            userData={user}
-            onRecoverUser={props.onRecoverUser}
-            deletedUser={true}
-            key={user.id}
-          ></User>
-        );
-      })}
+      {data.length > 0 ? (
+        data.map((user) => {
+          return (
+            <User
+              userData={user}
+              onRecoverUser={props.onRecoverUser}
+              deletedUser={true}
+              key={user.id}
+            ></User>
+          );
+        })
+      ) : (
+        <h3>No Deleted Users Yet</h3>
+      )}
     </div>
   );
 }
