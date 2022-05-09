@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Button,
@@ -23,7 +23,7 @@ export default function RegistrationForm() {
     console.log(data);
   };
   const handleShowClick = () => setShow(!show);
-  const [show, setShow] = React.useState(false);
+  const [show, setShow] = useState(false);
   let navigate = useNavigate();
 
   return (

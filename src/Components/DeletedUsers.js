@@ -12,7 +12,7 @@ export default function DeletedUsers(props) {
   };
 
   return (
-    <div>
+    <>
       <IconButton
         icon={<ChevronLeftIcon />}
         width="50px"
@@ -28,13 +28,13 @@ export default function DeletedUsers(props) {
               userData={user}
               onRecoverUser={props.onRecoverUser}
               deletedUser={true}
-              key={user.id}
+              key={user.username}
             ></User>
           );
         })
       ) : (
         <h3>No Deleted Users Yet</h3>
       )}
-    </div>
+    </>
   );
 }

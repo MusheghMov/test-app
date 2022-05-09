@@ -12,7 +12,7 @@ export default function EditUser(props) {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  
+
   let navigate = useNavigate();
   const backToHandler = () => {
     navigate("../user-list");

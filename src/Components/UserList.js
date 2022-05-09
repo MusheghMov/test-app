@@ -17,11 +17,11 @@ export default function UserList(props) {
   };
 
   if (isLoading) {
-    <Spinner color="red.500" />;
+    return <Spinner color="red.500" />;
   }
   if (isSuccess) {
     return (
-      <div>
+      <>
         <Flex justify="space-between">
           <Heading>Users List</Heading>
           <div>
@@ -41,12 +41,12 @@ export default function UserList(props) {
             <User
               userData={user}
               onDeleteUser={props.onDeleteUser}
-              key={user.id}
+              key={user.username}
               onEditUser={props.onEditUser}
             ></User>
           );
         })}
-      </div>
+      </>
     );
   }
 }

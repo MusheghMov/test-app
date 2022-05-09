@@ -2,7 +2,7 @@ import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import RegistrationForm from "./RegistrationForm";
 
-export default function Login(props) {
+export default function Login() {
   return (
     <Tabs isFitted variant="enclosed">
       <TabList mb="1em">
@@ -15,8 +15,12 @@ export default function Login(props) {
         </Link>
       </TabList>
       <TabPanels>
-        <TabPanel><RegistrationForm/></TabPanel>
-        <TabPanel><RegistrationForm/></TabPanel>
+        <TabPanel>
+          <RegistrationForm />
+        </TabPanel>
+        <TabPanel>
+          <RegistrationForm />
+        </TabPanel>
       </TabPanels>
     </Tabs>
   );

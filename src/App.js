@@ -15,25 +15,32 @@ const fetchUsers = async () => {
 };
 
 function App() {
-  const [usersData, setUsersData] = useState([]);
-  const [deletedUsers, setDeletedUsers] = useState([]);
+  const [usersData, setUsersData] = useState(
+    JSON.parse(localStorage.getItem("users"))
+  );
+  const [deletedUsers, setDeletedUsers] = useState(
+    JSON.parse(localStorage.getItem("deletedUsers")) || []
+  );
   const [editedUser, setEditedUser] = useState();
+
+  useEffect(() => {
+    localStorage.setItem("deletedUsers", JSON.stringify(deletedUsers));
+  }, [deletedUsers]);
+
+  useEffect(() => {
+    localStorage.setItem("users", JSON.stringify(usersData));
+  }, [usersData]);
 
   const { isLoading, isSuccess } = useQuery("users", fetchUsers, {
     onSuccess: (data) => {
-      if (!localStorage.getItem("users")) {
+      if (!usersData) {
         setUsersData(data);
-        localStorage.setItem("users", JSON.stringify(data));
-      } else {
-        setUsersData(JSON.parse(localStorage.getItem("users")));
-        setDeletedUsers(JSON.parse(localStorage.getItem("deletedUsers")));
       }
     },
   });
 
   const newUserHandler = (newUser) => {
-    usersData.push(newUser);
-    localStorage.setItem("users", JSON.stringify(usersData));
+    setUsersData((prevUsersData) => [...prevUsersData, newUser]);
   };
 
   const editUserHandler = (user) => {
@@ -41,46 +48,33 @@ function App() {
   };
 
   const editAndSaveUser = (changedUser) => {
-    let users = Object.keys(JSON.parse(localStorage.getItem("users"))).map(
-      (user) => {
-        if (
-          editedUser.username ===
-          JSON.parse(localStorage.getItem("users"))[user].username
-        ) {
-          return (user = changedUser);
-        } else {
-          return JSON.parse(localStorage.getItem("users"))[user];
-        }
+    let users = Object.keys(usersData).map((user) => {
+      if (editedUser.username === usersData[user].username) {
+        return (user = changedUser);
+      } else {
+        return usersData[user];
       }
-    );
-    localStorage.setItem("users", JSON.stringify(users));
+    });
     setUsersData(users);
   };
 
   const deleteUserHandler = (deletedUser) => {
-    deletedUsers.push(deletedUser);
+    setDeletedUsers((prevDeletedUsersData) => [
+      ...prevDeletedUsersData,
+      deletedUser,
+    ]);
     let users = usersData.filter((us) => us !== deletedUser);
-    localStorage.setItem("users", JSON.stringify(users));
-    setUsersData(JSON.parse(localStorage.getItem("users")));
-    localStorage.setItem("deletedUsers", JSON.stringify(deletedUsers));
+    setUsersData(users);
   };
 
   const recoverUserHandler = (recoveredUser) => {
-    usersData.push(recoveredUser);
-    localStorage.setItem("users", JSON.stringify(usersData));
+    setUsersData((prevDeletedUsersData) => [
+      ...prevDeletedUsersData,
+      recoveredUser,
+    ]);
     let users = deletedUsers.filter((user) => user !== recoveredUser);
     setDeletedUsers(users);
-    localStorage.setItem("deletedUsers", JSON.stringify(users));
   };
-
-  useEffect(() => {
-    if (!localStorage.getItem("users") && usersData.length > 0) {
-      localStorage.setItem("users", JSON.stringify(usersData));
-    }
-    if (!localStorage.getItem("deletedUsers")) {
-      localStorage.setItem("deletedUsers", JSON.stringify(deletedUsers));
-    }
-  }, [usersData, deletedUsers]);
 
   return (
     <div className="App">
