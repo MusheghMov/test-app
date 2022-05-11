@@ -8,13 +8,20 @@ import { useQuery } from "react-query";
 import { useEffect, useState } from "react";
 import EditUser from "./Components/EditUser";
 import DeletedUsers from "./Components/DeletedUsers";
+import Amplify, { Auth, API, graphqlOperation } from "aws-amplify";
+import awsconfig from "./aws-exports";
+import * as queries from "./graphql/queries";
+import * as mutations from "./graphql/mutations";
 
 const fetchUsers = async () => {
-  const res = await fetch("https://jsonplaceholder.typicode.com/users");
-  return res.json();
+  const allUsers = await API.graphql({ query: queries.listUsers });
+  return allUsers.data.listUsers.items;
 };
 
 function App() {
+  Amplify.configure(awsconfig);
+  Auth.configure(awsconfig);
+
   const [usersData, setUsersData] = useState(
     JSON.parse(localStorage.getItem("users"))
   );
@@ -39,21 +46,31 @@ function App() {
     },
   });
 
-  const newUserHandler = (newUser) => {
-    setUsersData((prevUsersData) => [...prevUsersData, newUser]);
+  const newUserHandler = async (newUser) => {
+    const createdUser = await API.graphql(
+      graphqlOperation(mutations.createUser, { input: newUser })
+    );
+    setUsersData((prevUsersData) => [
+      ...prevUsersData,
+      createdUser.data.createUser,
+    ]);
   };
 
   const editUserHandler = (user) => {
     setEditedUser(user);
   };
 
-  const editAndSaveUser = (changedUser) => {
+  const editAndSaveUser = async (changedUser) => {
     let users = Object.keys(usersData).map((user) => {
       if (editedUser.username === usersData[user].username) {
         return (user = changedUser);
       } else {
         return usersData[user];
       }
+    });
+    await API.graphql({
+      query: mutations.updateUser,
+      variables: { input: changedUser },
     });
     setUsersData(users);
   };

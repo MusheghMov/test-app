@@ -18,6 +18,8 @@ export default function EditUser(props) {
     navigate("../user-list");
   };
   const onSubmit = (data) => {
+    data.id = editUser.id;
+    console.log(data);
     props.editAndSaveUser(data);
     backToHandler();
   };
